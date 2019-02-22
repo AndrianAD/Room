@@ -8,6 +8,7 @@ import android.arch.persistence.room.Query
 
 @Dao
 interface UserDao {
+
     @Insert
     fun insert(user: User)
 

@@ -4,8 +4,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.arch.lifecycle.ViewModelProviders
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.Observer
+import android.support.v7.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -22,9 +22,12 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         if (savedInstanceState == null) {
             supportFragmentManager
@@ -33,9 +36,14 @@ class MainActivity : AppCompatActivity() {
                     .commit()
         }
 
-        viewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
+        recyclerview_id.layoutManager = LinearLayoutManager(this)
+        val adapter=UserAdapter(this)
+        recyclerview_id.adapter=adapter
 
-        viewModel.getAllUsers().observe(this, Observer { textView.setText(it.toString())})
+
+        viewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
+        viewModel.allUsers.observe(this, Observer { adapter.setItemList(it!!) } )
+
     }
 
 

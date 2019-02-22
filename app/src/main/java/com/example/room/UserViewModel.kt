@@ -4,12 +4,13 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.LiveData
 import android.util.Log
+import java.util.ArrayList
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
     private val TAG = javaClass.simpleName
     private var userDao : UserDao? = null
      var userDB : UserRoomDatabase
-    private var allUsers: LiveData<List<User>>
+    var allUsers: LiveData<List<User>>
 
     init {
         userDB= UserRoomDatabase.getInstance(application)!!
@@ -18,7 +19,6 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    fun getAllUsers(): LiveData<List<User>> = allUsers
 
     override fun onCleared() {
         super.onCleared()
