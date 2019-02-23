@@ -12,8 +12,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.room.R.id.age
 import com.example.room.R.id.name
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.Observer
 import kotlinx.android.synthetic.main.fragment_add_user.*
 import kotlinx.android.synthetic.main.fragment_add_user.view.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+
+
+
+
+
+
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,8 +50,20 @@ class AddUser : Fragment() {
             val userHaveJob = isWork.isChecked
             var userDao = MainActivity.viewModel.userDB.userDao()
 
-            InsertAsyncTask(userDao).execute(User(userName, userAge, userHaveJob))
 
+            //Cпособ через АsyncTask
+          //  InsertAsyncTask(userDao).execute(User(userName, userAge, userHaveJob))\
+
+
+            // Cпособ через RxJava
+            Observable.fromCallable {
+              userDao.insert(User(userName, userAge, userHaveJob))
+            }
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        Toast.makeText(activity,"Cделано Успешно",Toast.LENGTH_LONG).show()
+                    }
 
         }
 
@@ -51,7 +75,6 @@ class AddUser : Fragment() {
             userDao.insert(users[0])
             return null
         }
-
         override fun onPostExecute(result: Void?) {
             super.onPostExecute(result)
             Log.i(TAG,"User Added OK")
